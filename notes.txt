@@ -1,0 +1,48 @@
+DataSet Columns ['adult', 'belongs_to_collection', 'budget', 'genres', 'homepage', 'id',
+       'imdb_id', 'original_language', 'original_title', 'overview',
+       'popularity', 'poster_path', 'production_companies',
+       'production_countries', 'release_date', 'revenue', 'runtime',
+       'spoken_languages', 'status', 'tagline', 'title', 'video',
+       'vote_average', 'vote_count'],
+      
+
+
+Most useful Columns
+    [
+    'genres',
+    'overview',
+    'keywords',
+    'tagline',
+    'title',
+    'production_companies',
+    'spoken_languages',
+    'original_language',
+    'vote_average',
+    'popularity'
+    ]
+    &
+Null Values(Not Useful)
+   belongs_to_collection    40972
+   homepage                 37684
+   tagline                  25054
+
+
+Operations On Columns data  gathering and cleaning :-
+
+  -Remove Missing Title, Filling overview,tagline NaN with empty space 
+
+  -Converting the genres column from a string containing
+    dictionaries into a simple text string of genre names like 
+    "Action Adventure Comedy" for easier use in a recommendation system
+
+  - Combine overview,Tagline,Genre to change into numeric values for NLP
+    new column = tags
+
+
+NLP Text Pre-Process :-
+  On Tag Column
+   -removing Punctuations, stopwords 
+   -Lemmatization(Root dictionary form of a word)
+   -tokanization (split) breaking a sentence into individual words or token
+
+

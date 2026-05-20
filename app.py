@@ -8,7 +8,7 @@ API_BASE = "https://movie-rec-466x.onrender.com"
 TMDB_IMG = "https://image.tmdb.org/t/p/w500"
 
 st.set_page_config(
-    page_title="CineVerse",
+    page_title="MOVIEGPT",
     page_icon="🎬",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -565,7 +565,7 @@ with st.sidebar:
             <div style='font-family:"Bebas Neue",sans-serif; font-size:2rem; letter-spacing:5px;
                         background:linear-gradient(135deg,#fff,#e8b86d);
                         -webkit-background-clip:text; -webkit-text-fill-color:transparent;'>
-                CINEVERSE
+                MOVIEGPT
             </div>
             <div style='font-size:0.65rem; letter-spacing:3px; color:#4a9eff; text-transform:uppercase; margin-top:2px;'>
                 Your Cinema Universe
@@ -602,7 +602,7 @@ col_hero, _ = st.columns([3, 1])
 with col_hero:
     st.markdown("""
         <div style='padding: 0.5rem 0 0.8rem;'>
-            <div class='hero-title'>CINEVERSE</div>
+            <div class='hero-title'>MOVIEGPT</div>
             <div class='hero-sub'>✦ Discover · Explore · Experience ✦</div>
         </div>
     """, unsafe_allow_html=True)
@@ -693,7 +693,7 @@ elif st.session_state.view == "details":
     # ── Backdrop ──
     if data.get("backdrop_url"):
         st.markdown("<div class='backdrop-wrap'>", unsafe_allow_html=True)
-        st.image(data["backdrop_url"], use_column_width=True)
+        st.image(data["backdrop_url"], width="stretch")
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<br/>", unsafe_allow_html=True)
@@ -704,42 +704,110 @@ elif st.session_state.view == "details":
     with left:
         if data.get("poster_url"):
             st.markdown("<div class='poster-3d-wrap'><div class='poster-3d'>", unsafe_allow_html=True)
-            st.image(data["poster_url"], use_column_width=True)
+            st.image(data["poster_url"], width="stretch")
             st.markdown("</div></div>", unsafe_allow_html=True)
         else:
             st.markdown("<div class='no-poster' style='height:350px;'>🎬</div>", unsafe_allow_html=True)
 
     with right:
-        st.markdown("<div class='detail-card'>", unsafe_allow_html=True)
-
         title_text = data.get("title", "Unknown Title")
-        st.markdown(f"<div class='detail-title'>{title_text}</div>", unsafe_allow_html=True)
-
-        # Meta pills
         pills = ""
         release = (data.get("release_date") or "")[:4]
         if release:
             pills += f"<span class='detail-meta-pill'>📅 {release}</span>"
-
-        genres = data.get("genres", [])
-        for g in genres[:4]:
+        for g in (data.get("genres") or [])[:4]:
             pills += f"<span class='detail-meta-pill'>{g['name']}</span>"
-
         if data.get("vote_average"):
-            score = round(data["vote_average"], 1)
-            pills += f"<span class='detail-meta-pill'>⭐ {score}</span>"
-
-        if pills:
-            st.markdown(f"<div style='margin-bottom:0.5rem;'>{pills}</div>", unsafe_allow_html=True)
-
-        st.markdown("<hr/>", unsafe_allow_html=True)
-
+            pills += f"<span class='detail-meta-pill'>⭐ {round(data['vote_average'], 1)}</span>"
         overview = data.get("overview") or "No overview available."
         st.markdown(
-            f"<div class='detail-overview'>{overview}</div>",
+            f"""<div class='detail-card'><div class='detail-title'>{title_text}</div>"""
+            f"""<div style='margin:0.4rem 0 0.8rem;'>{pills}</div>"""
+            f"""<hr style='border:none;height:1px;background:rgba(255,255,255,0.1);margin:0.8rem 0;'/>"""
+            f"""<div class='detail-overview'>{overview}</div></div>""",
             unsafe_allow_html=True,
         )
-        st.markdown("</div>", unsafe_allow_html=True)
+
+    # ── Trailer + Watch On ──
+    st.markdown("<hr/>", unsafe_allow_html=True)
+
+    trailer_col, watch_col = st.columns([3, 2], gap="large")
+
+    with trailer_col:
+        st.markdown("<div class='section-heading'>🎬 Trailer</div>", unsafe_allow_html=True)
+        videos, verr = api_get_json(f"/tmdb/movie/{tmdb_id}/videos")
+        trailer_key = None
+        if not verr and videos:
+            items = videos.get("results", videos) if isinstance(videos, dict) else videos
+            for v in items:
+                if v.get("site") == "YouTube" and v.get("type") == "Trailer" and v.get("official"):
+                    trailer_key = v["key"]
+                    break
+            if not trailer_key:
+                for v in items:
+                    if v.get("site") == "YouTube" and v.get("type") in ("Trailer", "Teaser"):
+                        trailer_key = v["key"]
+                        break
+
+        if trailer_key:
+            st.markdown(
+                f"""<div style='border-radius:16px;overflow:hidden;border:1px solid rgba(232,184,109,0.2);box-shadow:0 8px 40px rgba(0,0,0,0.5);'><iframe width='100%' height='360' src='https://www.youtube.com/embed/{trailer_key}?rel=0&modestbranding=1' frameborder='0' allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture' allowfullscreen style='display:block;'></iframe></div>""",
+                unsafe_allow_html=True,
+            )
+        else:
+            title_q = (data.get("title") or "").replace(" ", "+")
+            year_q = (data.get("release_date") or "")[:4]
+            yt_search = f"https://www.youtube.com/results?search_query={title_q}+{year_q}+official+trailer"
+            st.markdown(
+                f"""<div style='background:rgba(255,255,255,0.03);border:1px dashed rgba(232,184,109,0.2);border-radius:16px;padding:2rem;text-align:center;'><div style='font-size:2.5rem;margin-bottom:0.5rem;'>🎞️</div><div style='color:#7a839a;font-size:0.85rem;margin-bottom:1rem;'>No trailer in database</div><a href='{yt_search}' target='_blank' style='display:inline-block;background:rgba(232,184,109,0.12);border:1px solid rgba(232,184,109,0.35);border-radius:50px;color:#e8b86d;padding:0.4rem 1.2rem;font-size:0.8rem;text-decoration:none;letter-spacing:1px;font-weight:600;'>🔍 Search on YouTube</a></div>""",
+                unsafe_allow_html=True,
+            )
+
+    with watch_col:
+        st.markdown("<div class='section-heading'>📺 Watch On</div>", unsafe_allow_html=True)
+        providers, perr = api_get_json(f"/tmdb/movie/{tmdb_id}/watch/providers")
+        watch_data = None
+        if not perr and providers:
+            results = providers.get("results", {}) if isinstance(providers, dict) else {}
+            watch_data = results.get("US") or (next(iter(results.values()), None) if results else None)
+
+        provider_logo_base = "https://image.tmdb.org/t/p/w45"
+
+        def provider_pills(label, items, color):
+            if not items:
+                return ""
+            html = f"<div style='font-size:0.7rem;letter-spacing:2px;color:{color};text-transform:uppercase;font-weight:600;margin:0.8rem 0 0.4rem;'>{label}</div>"
+            html += "<div style='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:0.5rem;'>"
+            for p in items:
+                name = p.get("provider_name", "")
+                logo = p.get("logo_path", "")
+                logo_url = f"{provider_logo_base}{logo}" if logo else ""
+                html += f"<div style='display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:50px;padding:5px 12px 5px 6px;'>"
+                if logo_url:
+                    html += f"<img src='{logo_url}' style='width:22px;height:22px;border-radius:50%;object-fit:cover;'/>"
+                html += f"<span style='font-size:0.78rem;color:#e8eaf0;font-weight:500;'>{name}</span></div>"
+            html += "</div>"
+            return html
+
+        if watch_data:
+            html_block = ""
+            html_block += provider_pills("Stream", watch_data.get("flatrate", []), "#4a9eff")
+            html_block += provider_pills("Rent", watch_data.get("rent", []), "#e8b86d")
+            html_block += provider_pills("Buy", watch_data.get("buy", []), "#7ec87e")
+            tmdb_watch_url = watch_data.get("link", f"https://www.themoviedb.org/movie/{tmdb_id}/watch")
+            if html_block.strip():
+                st.markdown(
+                    f"""<div style='background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.2rem 1.4rem;'>{html_block}<div style='margin-top:1rem;'><a href='{tmdb_watch_url}' target='_blank' style='font-size:0.75rem;color:#7a839a;text-decoration:none;letter-spacing:1px;'>↗ All options on TMDB</a></div></div>""",
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.info("No streaming data available for your region.")
+        else:
+            title_q = (data.get("title") or "").replace(" ", "+")
+            st.markdown(
+                f"""<div style='background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.4rem;'><div style='font-size:0.75rem;color:#7a839a;margin-bottom:1rem;letter-spacing:1px;'>Search across platforms:</div><div style='display:flex;flex-direction:column;gap:8px;'><a href='https://www.netflix.com/search?q={title_q}' target='_blank' style='display:flex;align-items:center;gap:10px;background:rgba(229,9,20,0.1);border:1px solid rgba(229,9,20,0.25);border-radius:10px;padding:8px 14px;text-decoration:none;color:#e8eaf0;font-size:0.85rem;font-weight:500;'>🎬 Netflix</a><a href='https://www.primevideo.com/search/ref=atv_nb_sr?phrase={title_q}' target='_blank' style='display:flex;align-items:center;gap:10px;background:rgba(0,168,225,0.1);border:1px solid rgba(0,168,225,0.25);border-radius:10px;padding:8px 14px;text-decoration:none;color:#e8eaf0;font-size:0.85rem;font-weight:500;'>📦 Prime Video</a><a href='https://www.disneyplus.com/search' target='_blank' style='display:flex;align-items:center;gap:10px;background:rgba(17,60,207,0.1);border:1px solid rgba(17,60,207,0.25);border-radius:10px;padding:8px 14px;text-decoration:none;color:#e8eaf0;font-size:0.85rem;font-weight:500;'>✨ Disney+</a><a href='https://tv.apple.com/search?term={title_q}' target='_blank' style='display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:8px 14px;text-decoration:none;color:#e8eaf0;font-size:0.85rem;font-weight:500;'>🍎 Apple TV+</a><a href='https://www.justwatch.com/us/search?q={title_q}' target='_blank' style='display:flex;align-items:center;gap:10px;background:rgba(255,196,0,0.08);border:1px solid rgba(255,196,0,0.2);border-radius:10px;padding:8px 14px;text-decoration:none;color:#e8eaf0;font-size:0.85rem;font-weight:500;'>🌐 JustWatch (all platforms)</a></div></div>""",
+                unsafe_allow_html=True,
+            )
 
     # ── Recommendations ──
     st.markdown("<hr/>", unsafe_allow_html=True)

@@ -9,6 +9,9 @@ Movie GPT is an AI-powered movie recommendation system that suggests movies base
 📊 Uses cosine similarity for matching movies
 🎨 Simple and interactive UI with Streamlit
 ⚡ Fast recommendation generation
+
+
+
 🛠️ Technologies Used
 Python
 Pandas
@@ -22,7 +25,7 @@ TMDB Dataset
 
 📦 Installation
 1. Clone the repository
-git clone https://github.com/your-username/Movie-GPT.git
+git clone https://github.com/Gauravpoudel7/MovieGPT.git
 
 3. Navigate to the project folder
 cd Movie-GPT
@@ -36,6 +39,9 @@ streamlit run app.py
 
 PREVIEW
 <img width="1917" height="938" alt="Screenshot 2026-05-20 155614" src="https://github.com/user-attachments/assets/0b88d843-1f6a-48ef-a8ab-d1e5844239c4" />
+
+
+
 
 🧠 How It Works
 Movie data is cleaned and processed

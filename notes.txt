@@ -39,10 +39,60 @@ Operations On Columns data  gathering and cleaning :-
     new column = tags
 
 
+
+
+
 NLP Text Pre-Process :-
   On Tag Column
    -removing Punctuations, stopwords 
    -Lemmatization(Root dictionary form of a word)
    -tokanization (split) breaking a sentence into individual words or token
 
+
+
+
+
+
+   -Create the TF-IDF object for vectorization
+   tfidf = TfidfVectorizer(
+    max_features=50000,#"Keep only the top 50,000 important words/features
+    ngram_range=(1,2),#unigrams → single words bigrams → two-word combinations
+    stop_words='english'
+   )
+   
+  -Convert every movie tag into numerical TF-IDF vectors
+
+  -Use Cosine similarity (measures angle between vectors)
+
+
+   Similarity Scores:-
+   Value	        Meaning
+     1	           exactly same
+     0	           unrelated
+    -1	           opposite
+
+
+   sim_score = cosine_similarity(
+    tfidf_matrix[idx],
+    tfidf_matrix    #compairs (index) single movie vector to all movie vectos
+    ).flatten()  
+
+
+  Step 1
+    Find Avatar index.
+
+  Step 2
+    Compute similarity with all movies.
+
+   Step 3
+    Sort descending.
+
+  Step 4
+    Remove self.
+
+  Step 5
+    Return movie titles.
+
+
+    
 

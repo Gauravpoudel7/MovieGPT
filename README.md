@@ -7,17 +7,7 @@ Movie GPT is an AI-powered movie recommendation system that suggests movies base
 
 🛠️ Technologies Used Python Pandas NumPy Scikit-learn Streamlit Pickle TMDB Dataset
 
-📦 Installation
 
-Clone the repository git clone https://github.com/Gauravpoudel7/MovieGPT.git
-
-Navigate to the project folder cd Movie-GPT
-
-Install dependencies pip install -r requirements.txt
-
-▶️ Run the Project streamlit run app.py
-
-PREVIEW Screenshot 2026-05-20 155614
 
 🧠 How It Works Movie data is cleaned and processed Important features like genres, keywords, cast, and overview are combined Text vectorization is performed using CountVectorizer Cosine similarity calculates movie similarity Recommended movies are displayed to the user 📊 Machine Learning Concepts Used Natural Language Processing (NLP) Text Vectorization Cosine Similarity Recommendation Systems CHECK OUT NOTES !!!
 

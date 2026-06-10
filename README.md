@@ -2,11 +2,9 @@
 
 Movie GPT is an AI-powered movie recommendation system that suggests movies based on user preferences using Machine Learning and content-based filtering techniques.
 
-<<<<<<< HEAD
 🚀 Features 🔍 Search movies instantly 🎯 Personalized movie recommendations 🧠 Content-based recommendation system 📊 Uses cosine similarity for matching movies 🎨 Simple and interactive UI with Streamlit ⚡ Fast recommendation generation
 
 🛠️ Technologies Used Python Pandas NumPy Scikit-learn Streamlit Pickle TMDB Dataset
-
 
 
 🧠 How It Works Movie data is cleaned and processed Important features like genres, keywords, cast, and overview are combined Text vectorization is performed using CountVectorizer Cosine similarity calculates movie similarity Recommended movies are displayed to the user 📊 Machine Learning Concepts Used Natural Language Processing (NLP) Text Vectorization Cosine Similarity Recommendation Systems CHECK OUT NOTES !!!

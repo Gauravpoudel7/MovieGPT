@@ -76,13 +76,13 @@ Deep learning recommendations
 Voice-based search
 
 
->>>>>>> 06dca8c2fcb6ed2a25ce009d4ee1f5c46fa1a1f0
+ 06dca8c2fcb6ed2a25ce009d4ee1f5c46fa1a1f0
 
 🤝 Contributing
 
 Contributions are welcome.
 
-<<<<<<< HEAD
+
 Fork the repository Create a new branch Make your changes Submit a pull request
 =======
 Fork the repository
@@ -90,19 +90,15 @@ Create a new branch
 Make your changes
 Submit a pull request
 
->>>>>>> 06dca8c2fcb6ed2a25ce009d4ee1f5c46fa1a1f0
 
 📜 License
 
 This project is licensed under the MIT License.
 
-<<<<<<< HEAD
 👨‍💻 Author
 
 Developed by Gaurav Poudel 🚀
-=======
 
-👨‍💻 Author
 
-Developed by Gaurav Poudel 🚀
->>>>>>> 06dca8c2fcb6ed2a25ce009d4ee1f5c46fa1a1f0
+
+

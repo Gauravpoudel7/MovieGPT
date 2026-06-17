@@ -60,7 +60,15 @@ NLP Text Pre-Process :-
     stop_words='english'
    )
    
+
   -Convert every movie tag into numerical TF-IDF vectors
+      TF-IDF (Term Frequency–Inverse Document Frequency) is a statistical text 
+      representation method used in NLP.
+
+      It converts text into numbers based on:
+        how often a word appears in a document (TF)
+        how rare that word is across all documents (IDF)
+
 
   -Use Cosine similarity (measures angle between vectors)
 
